@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Touch Java Game</title>
+<script src="https://cjrtnc.leaningtech.com/2.3/loader.js"></script>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    #gameArea {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        touch-action: none;
+    }
+</style>
+</head>
+
+<body>
+
+<div id="gameArea"></div>
+
+<script>
+    // ১. CheerpJ ইনিশিয়ালাইজ
+    cheerpjInit({
+        canvasContainer: "gameArea",
+        enableInputMethods: true
+    });
+
+    // ২. জার ফাইল রান করা (সবচেয়ে গুরুত্বপূর্ণ অংশ)
+    // আপনার রিপোজিটরির নাম 'Java' এবং ফাইলের নাম 'java.jar'
+    // তাই সঠিক পাথ হলো: /app/Java/java.jar
+    cheerpjRunJar("/app/c/java.jar");
+
+    // ৩. টাচ কন্ট্রোল সেটআপ
+    const gameContainer = document.getElementById("gameArea");
+
+    function sendMouseEvent(type, x, y) {
+        // CheerpJ এর তৈরি ক্যানভাস খুঁজে বের করা
+        let canvas = document.getElementsByTagName("canvas")[0];
+        
+        if(canvas) {
+            let event = new MouseEvent(type, {
+                clientX: x,
+                clientY: y,
+                bubbles: true,
+                cancelable: true,
+                view: window
+            });
+            canvas.dispatchEvent(event);
+        }
+    }
+
+    // টাচ ইভেন্ট লিসেনার
+    gameContainer.addEventListener("touchstart", e => {
+        e.preventDefault();
+        let t = e.touches[0];
+        sendMouseEvent("mousedown", t.clientX, t.clientY);
+    }, {passive: false});
+
+    gameContainer.addEventListener("touchmove", e => {
+        e.preventDefault();
+        let t = e.touches[0];
+        sendMouseEvent("mousemove", t.clientX, t.clientY);
+    }, {passive: false});
+
+    gameContainer.addEventListener("touchend", e => {
+        e.preventDefault();
+        sendMouseEvent("mouseup", 0, 0);
+    }, {passive: false});
+
+</script>
+
+</body>
+</html>
